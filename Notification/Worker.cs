@@ -41,6 +41,7 @@ namespace Notification
                 ServiceBusProcessor processor = client.CreateProcessor(_configuration.QueueName, new ServiceBusProcessorOptions());
 
                 processor.ProcessMessageAsync += MessageHandler;
+                
                 processor.ProcessErrorAsync += ErrorHandler;
 
                 await processor.StartProcessingAsync();
@@ -56,6 +57,8 @@ namespace Notification
 
         async Task MessageHandler(ProcessMessageEventArgs args)
         {
+            await Task.Delay(3000);
+
             var eventType = args.Message.ApplicationProperties["eventType"].ToString().ToLower();
             if (eventType == nameof(DefaultEventModel).ToLower())
             {
